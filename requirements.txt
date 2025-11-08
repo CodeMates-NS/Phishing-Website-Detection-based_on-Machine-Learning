@@ -1,9 +1,0 @@
-Flask
-gunicorn
-joblib
-pandas
-tldextract
-beautifulsoup4
-requests
-python-whois
-scikit-learn
