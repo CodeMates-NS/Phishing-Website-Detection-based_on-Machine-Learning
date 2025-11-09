@@ -15,7 +15,7 @@ print(df.head())
 le = LabelEncoder()
 
 for col in df.columns:
-    if df[col].dtype == 'object':  # object = non-numeric
+    if df[col].dtype == 'object':  
         df[col] = le.fit_transform(df[col])
         print(f"Encoded '{col}' -> {list(le.classes_)}")
 
@@ -26,3 +26,4 @@ print("\nData Types after Encoding:\n", df.dtypes)
 
 df.to_csv("phishing_numeric_dataset.csv", index=False)
 print("\n💾 Saved numeric dataset as phishing_numeric_dataset.csv")
+
