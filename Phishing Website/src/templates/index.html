@@ -8,13 +8,13 @@
 
 
     <script>
-        // 🧹 Clear input on reload
+        
         window.onload = function() {
             const urlField = document.getElementById('url');
             if (urlField) urlField.value = '';
         };
 
-        // 🛡️ Simple client-side validation (allow any URL string)
+        
         function validateForm() {
             const urlField = document.getElementById('url');
             const urlValue = urlField.value.trim();
@@ -29,16 +29,16 @@
                 return false;
             }
 
-            return true; // ✅ allow any string input
+            return true; 
         }
 
-        // 🔁 Reset the form and hide results instantly
+       
         function resetForm() {
-            document.getElementById('url').value = '';  // clear input
+            document.getElementById('url').value = '';  
             const resultBox = document.querySelector('.result');
-            if (resultBox) resultBox.style.display = 'none'; // hide result section
+            if (resultBox) resultBox.style.display = 'none'; 
             const urlBox = document.querySelector('.url-display');
-            if (urlBox) urlBox.style.display = 'none'; // hide URL section too
+            if (urlBox) urlBox.style.display = 'none'; 
         }
     </script>
 </head>
@@ -110,3 +110,4 @@
     </div>
 </body>
 </html>
+
