@@ -1,6 +1,4 @@
-/* static/style.css
-   Clean, responsive UI + fix for very long URL wrapping
-*/
+
 
 :root{
   --bg: #f7f9fc;
@@ -19,10 +17,10 @@ body{
   font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background: var(--bg);
   color: #111827;
-  height: 100vh;                       /* full viewport height */
-  display: flex;                       /* enables centering */
-  align-items: center;                 /* vertical center */
-  justify-content: center;             /* horizontal center */
+  height: 100vh;                       
+  display: flex;                       
+  align-items: center;                 
+  justify-content: center;             
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
@@ -66,9 +64,9 @@ h1{
 form {
   margin-top: 25px;
   display: flex;
-  justify-content: center;   /* centers the input + button horizontally */
+  justify-content: center;   
   align-items: center;
-  gap: 10px;                 /* space between input and button */
+  gap: 10px;                 
 }
 
 form input[type="text"] {
@@ -85,7 +83,7 @@ form button {
 
 /* Input */
 input[type="text"] {
-  width: 400px;              /* fixed width for balance */
+  width: 400px;              
   padding: 10px 14px;
   font-size: 16px;
   border: 1px solid #d1d5db;
@@ -103,7 +101,7 @@ input[type="text"]:focus {
 
 
 button {
-  background-color: #3b82f6;     /* nice blue tone */
+  background-color: #3b82f6;     
   color: white;
   border: none;
   padding: 10px 20px;
@@ -111,7 +109,7 @@ button {
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
-  height: 42px;                  /* match input height */
+  height: 42px;                  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,7 +117,7 @@ button {
 }
 
 button:hover {
-  background-color: #2563eb;     /* darker on hover */
+  background-color: #2563eb;     
   transform: translateY(-1px);
 }
 
@@ -161,9 +159,9 @@ button:active {
   color:#0f172a;
   font-size:14px;
   line-height:1.45;
-  word-break: break-word;          /* break long words if needed */
-  overflow-wrap: anywhere;         /* wrap anywhere for extremely long tokens */
-  white-space: normal;             /* allow wrapping */
+  word-break: break-word;          
+  overflow-wrap: anywhere;         
+  white-space: normal;             
   box-sizing:border-box;
   display:block;
 }
@@ -210,3 +208,4 @@ justify: center;
 
 /* small accessibility */
 .visually-hidden{ position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
+
