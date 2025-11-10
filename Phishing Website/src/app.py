@@ -19,7 +19,8 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    url = request.form['url'].strip()
+    data = request.get_json()
+    url = data.get('url', "").strip()
 
     # --- Extract features
     features = extract_features(url)
