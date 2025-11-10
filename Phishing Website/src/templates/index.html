@@ -44,6 +44,7 @@
 </head>
 
 <body>
+
     <div class="page-wrap">
         <div class="container">
             <h1>🔍 Phishing Website Detection</h1>
@@ -108,6 +109,44 @@
 
         </div>
     </div>
+<!-- Footer Maintenance Banner -->
+<footer class="maintenance-banner">
+    <span class="maintenance-text">
+        ⚠️ This website is under active improvement, all features work normally.
+    </span>
+</footer>
+
+<style>
+    .maintenance-banner {
+        width: 100%;
+        background: #000;                /* solid black footer */
+        padding: 16px 0;                 /* medium big size */
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 9999;
+        border-top: 2px solid #444;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
+    }
+
+    .maintenance-text {
+        color: #f8f9fa;                  /* soft white */
+        font-family: Arial, sans-serif;
+        font-size: 17px;                 /* medium-big text */
+        font-weight: 600;
+        animation: textBlink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes textBlink {
+        0%   { opacity: 1; }
+        50%  { opacity: 0.35; }           /* blink only text */
+        100% { opacity: 1; }
+    }
+</style>
+
+
+
 </body>
 </html>
 
