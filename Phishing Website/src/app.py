@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_cors import CORS
+from flask import jsonify
 import joblib
 import pandas as pd
 import random
@@ -10,7 +11,6 @@ CORS(app)  # <-- this line enables cross-origin access
 
 # Load trained model
 model = joblib.load("rf_model.pkl")
-
 
 @app.route('/')
 def home():
@@ -129,12 +129,11 @@ def predict():
             print("⚠️ Reason extraction error:", e)
             extra_reasons = ["Anomaly detected — possible phishing behavior."]
 
-    return render_template(
-        'index.html',
-        prediction_text=result,
-        url=url,
-        extra_reasons=extra_reasons
-    )
+
+    return jsonify({
+        "prediction_text": result,
+        "extra_reasons": extra_reasons
+    })
 
 
 if __name__ == "__main__":

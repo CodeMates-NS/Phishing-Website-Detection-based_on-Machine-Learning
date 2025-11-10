@@ -1,5 +1,5 @@
 // =============== CONFIGURATION ===============
-const backendURL = "https://phishing-website-detection-based-on.onrender.com";
+const backendURL = "https://phishing-website-detection-based-on.onrender.com/predict";
 // Change this only if you redeploy your backend on a different Render URL
 // =============================================
 
