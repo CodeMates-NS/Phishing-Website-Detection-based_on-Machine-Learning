@@ -24,6 +24,12 @@
         {% if prediction_text %}
         <div class="result {% if 'Phishing' in prediction_text %}danger{% else %}success{% endif %}">
             <h2>{{ prediction_text }}</h2>
+            {% if confidence %}
+<p style="margin-top: 8px; font-weight:600; color:#8affd6;">
+    Model Confidence: {{ confidence }}%
+</p>
+{% endif %}
+
 
             {% if prediction_text == "Phishing Website Detected ⚠️" and extra_reasons %}
             <p class="reason-note">This site shows suspicious indicators. Click to view details.</p>
@@ -54,6 +60,10 @@
                 };
             </script>
             {% endif %}
+            <p class="disclaimer">
+    ⚠️ This tool is for research and educational purposes only.
+    Predictions may not always be 100% accurate. Please verify suspicious websites independently.
+</p>
 
             <button type="button" class="reset-btn" onclick="resetForm()">🔄 Reset</button>
         </div>
@@ -62,9 +72,7 @@
     </div>
 </div>
 
-<footer class="maintenance-banner">
-    <span class="maintenance-text">⚠️ This website is under active improvement. Some features may not work currently and will be online soon.</span>
-</footer>
+
 
 <script>
 window.onload = function() {

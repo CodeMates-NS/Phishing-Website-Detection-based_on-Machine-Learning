@@ -13,11 +13,13 @@ from datetime import datetime
 
 REQUEST_TIMEOUT = 4
 
+
 def safe_bool(x, default=False):
     try:
         return bool(x)
     except Exception:
         return default
+
 
 def try_get_whois(domain_name):
     try:
@@ -25,10 +27,12 @@ def try_get_whois(domain_name):
     except Exception:
         return None
 
+
 def first_or_same(value):
     if isinstance(value, (list, tuple)) and value:
         return value[0]
     return value
+
 
 def extract_features(url: str) -> dict:
     """
@@ -42,7 +46,6 @@ def extract_features(url: str) -> dict:
         ext = tldextract.extract(url)
         domain_name = (ext.domain + '.' + ext.suffix) if ext.suffix else ext.domain
 
-        # Try network fetch (best-effort)
         soup = None
         response = None
         try:
@@ -51,41 +54,31 @@ def extract_features(url: str) -> dict:
         except Exception:
             pass
 
-        # having_IP_Address
         try:
             socket.inet_aton(domain)
             features['having_IP_Address'] = 1
         except Exception:
             features['having_IP_Address'] = -1
 
-        # URL_Length
         length = len(url)
         features['URL_Length'] = 1 if length < 54 else (0 if length <= 75 else -1)
 
-        # Shortining_Service
         shortening_services = r"(bit\.ly|goo\.gl|tinyurl\.com|ow\.ly|t\.co)"
         features['Shortining_Service'] = -1 if re.search(shortening_services, url, re.I) else 1
 
-        # having_At_Symbol
         features['having_At_Symbol'] = -1 if "@" in url else 1
 
-        # double_slash_redirecting
         features['double_slash_redirecting'] = -1 if url.count('//') > 1 else 1
 
-        # Prefix_Suffix
         features['Prefix_Suffix'] = -1 if '-' in domain else 1
 
-        # having_Sub_Domain
         dots = ext.subdomain.count('.') if ext.subdomain else 0
         features['having_Sub_Domain'] = 1 if dots == 0 else (0 if dots == 1 else -1)
 
-        # SSLfinal_State
         features['SSLfinal_State'] = 1 if url.lower().startswith("https") else -1
 
-        # WHOIS
         w = try_get_whois(domain_name)
 
-        # Domain_registeration_length
         try:
             exp = first_or_same(getattr(w, "expiration_date", None))
             if exp:
@@ -96,7 +89,6 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['Domain_registeration_length'] = -1
 
-        # Favicon
         try:
             if soup:
                 icon = soup.find("link", rel=lambda v: v and 'icon' in v.lower())
@@ -107,13 +99,10 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['Favicon'] = -1
 
-        # port
         features['port'] = -1 if (":443" not in url and ":80" not in url) else 1
 
-        # HTTPS_token
         features['HTTPS_token'] = -1 if "https" in domain.lower() else 1
 
-        # Request_URL (images from same domain)
         try:
             if soup:
                 imgs = soup.find_all('img', src=True)
@@ -128,7 +117,6 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['Request_URL'] = 0
 
-        # URL_of_Anchor
         try:
             if soup:
                 anchors = soup.find_all('a', href=True)
@@ -143,7 +131,6 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['URL_of_Anchor'] = 0
 
-        # Links_in_tags
         try:
             if soup:
                 links = soup.find_all('link', href=True)
@@ -152,14 +139,13 @@ def extract_features(url: str) -> dict:
                 if total == 0:
                     features['Links_in_tags'] = 1
                 else:
-                    safe = sum(1 for l in links if domain in l.get('href', '') or l.get('href','').startswith('/'))
+                    safe = sum(1 for l in links if domain in l.get('href', '') or l.get('href', '').startswith('/'))
                     features['Links_in_tags'] = 1 if (safe / total) >= 0.5 else -1
             else:
                 features['Links_in_tags'] = 0
         except Exception:
             features['Links_in_tags'] = 0
 
-        # SFH
         try:
             if soup:
                 forms = soup.find_all('form', action=True)
@@ -170,50 +156,44 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['SFH'] = 0
 
-        # Submitting_to_email
         try:
             if soup:
                 forms = soup.find_all('form', action=True)
-                features['Submitting_to_email'] = -1 if any("mailto:" in f.get('action','') for f in forms) else 1
+                features['Submitting_to_email'] = -1 if any("mailto:" in f.get('action', '') for f in forms) else 1
             else:
                 features['Submitting_to_email'] = 1
         except Exception:
             features['Submitting_to_email'] = 1
 
-        # Abnormal_URL
         features['Abnormal_URL'] = -1 if domain and (domain not in url) else 1
 
-        # Redirect
         try:
             features['Redirect'] = -1 if (response is not None and len(response.history) > 2) else 1
         except Exception:
             features['Redirect'] = 1
 
-        # on_mouseover
         try:
-            features['on_mouseover'] = -1 if (response is not None and re.search(r"onmouseover", response.text, re.I)) else 1
+            features['on_mouseover'] = -1 if (
+                        response is not None and re.search(r"onmouseover", response.text, re.I)) else 1
         except Exception:
             features['on_mouseover'] = 1
 
-        # RightClick
         try:
-            features['RightClick'] = -1 if (response is not None and re.search(r"event\\.button\\s*==\\s*2", response.text)) else 1
+            features['RightClick'] = -1 if (
+                        response is not None and re.search(r"event\\.button\\s*==\\s*2", response.text)) else 1
         except Exception:
             features['RightClick'] = 1
 
-        # popUpWidnow
         try:
             features['popUpWidnow'] = -1 if (response is not None and re.search(r"alert\\", response.text)) else 1
         except Exception:
             features['popUpWidnow'] = 1
 
-        # Iframe
         try:
             features['Iframe'] = -1 if (response is not None and "<iframe" in response.text.lower()) else 1
         except Exception:
             features['Iframe'] = 1
 
-        # age_of_domain
         try:
             creation = first_or_same(getattr(w, "creation_date", None))
             if creation:
@@ -224,29 +204,23 @@ def extract_features(url: str) -> dict:
         except Exception:
             features['age_of_domain'] = -1
 
-        # DNSRecord
         features['DNSRecord'] = 1 if domain_name else -1
 
-        # Placeholders (leave as-is to keep model compatibility)
         features['web_traffic'] = 0
         features['Page_Rank'] = 0
 
-        # Google_Index (kept same behavior)
         features['Google_Index'] = 1 if "google" in url.lower() else -1
 
-        # Links_pointing_to_page
         try:
             features['Links_pointing_to_page'] = 1 if (soup and len(soup.find_all('a')) > 5) else -1
         except Exception:
             features['Links_pointing_to_page'] = -1
 
-        # Statistical_report
         features['Statistical_report'] = -1 if re.search(r"(login|bank|free|verify|update)", url, re.I) else 1
 
     except Exception as e:
         print("Error extracting features:", e)
 
-    # Enforce column order used by the trained model
     try:
         feature_order = pd.read_csv("X_train.csv").columns.tolist()
     except Exception:

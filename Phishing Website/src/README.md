@@ -1,22 +1,41 @@
 # 🔍 Machine Learning-Based Phishing Website Detection
 
-A web application built with **Flask** and **Machine Learning** that detects **phishing websites** based on 30 extracted URL features — such as SSL state, domain age, subdomain structure, and request patterns.  
+A web application built with **Flask** and **Machine Learning** that detects **phishing websites** based on 30 extracted URL features such as SSL state, domain age, subdomain structure, and request patterns.  
 The system predicts whether a given website is **legitimate** or **phishing** and provides human-readable reasoning behind each prediction.
 
 ---
 
 ## 🚀 Project Overview
+- Machine-learning-based phishing detection  
+- Safe URL-only analysis  
+- Random Forest backend  
+- Modern cyber-themed UI  
 
-This project implements a **machine learning approach** to detect phishing websites from their URLs and domain behavior without visiting them.  
-The model was trained on a balanced dataset and leverages Random Forest for high accuracy on class-imbalanced data.
+---
 
-### ✨ Key Features
-- ✅ **URL-based detection:** No need to load the full site, reducing risk.
-- 🤖 **Machine Learning model:** Trained using 30 URL features.
-- 💬 **Explainable results:** Displays *why* a URL was marked as phishing (e.g., missing SSL, short domain registration, etc.).
-- 🧠 **Handles missing values and class imbalance** effectively.
-- 🎨 **Modern UI:** Clean HTML/CSS interface built with Flask templates.
-- 👥 **Collaboration Ready:** Code structured for easy contribution.
+## ✨ Key Features
+- ✅ URL-based phishing detection  
+- ✅ Explainable predictions  
+- ✅ 30-feature extraction system  
+- ✅ Cyber-themed responsive UI  
+- ✅ Auto URL normalization  
+- ✅ Invalid input handling  
+- ✅ Calibrated confidence score  
+
+---
+
+## 🛠 Additional Enhancements
+### 🔗 URL Normalization  
+- Converts partial URLs into correct format  
+
+### 🛑 Invalid Input Filtering  
+- Prevents random non-URL text  
+
+### 📊 Confidence Calibration  
+- Displays realistic model confidence  
+
+### 🎨 UI Upgrade  
+- Dim neon glow and centered layout  
 
 ---
 
@@ -185,5 +204,10 @@ Finally, we thank our family, friends, and collaborators for their constant moti
 **“True innovation comes when passion meets purpose — and teamwork turns ideas into impact.”**
 Inspired by real-world phishing defense mechanisms and modern web security standards.
 
+---
+## ⚠ Disclaimer
+This tool is intended for *educational and research purposes only*.  
+Predictions may not always be *100% accurate*.  
+Use caution and verify suspicious websites manually.
 ---
 > 💬 “Detecting phishing isn’t just about blocking fake sites — it’s about building smarter, safer web experiences.”

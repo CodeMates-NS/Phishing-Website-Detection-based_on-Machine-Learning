@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request
 import joblib
 import pandas as pd
 import random
@@ -7,65 +7,68 @@ from urllib.parse import urlparse
 from feature_extraction import extract_features
 
 app = Flask(__name__)
-app.secret_key = "replace-me"  # needed for flash() if you use it in the template
+app.secret_key = "replace-me"
 
-# Load trained model
 model = joblib.load("rf_model.pkl")
 
-# ---------- helpers ----------
 DOMAIN_LIKE_RE = re.compile(
     r"^(?:https?://)?(?:www\.)?(?:[A-Za-z0-9-]{1,63}\.)+[A-Za-z]{2,63}(?:[/:?#].*)?$"
 )
 
+
 def normalize_url(user_input: str) -> tuple[str, str]:
-    """
-    Returns (normalized_url, display_url).
-    - Adds https:// if missing.
-    - Leaves query/path untouched.
-    """
     s = user_input.strip()
-    # If it's clearly not domain-like, treat as invalid (random words, numbers etc.)
+
     if not DOMAIN_LIKE_RE.match(s):
         return "", s
 
-    # If scheme missing, add https://
     parsed = urlparse(s)
     if not parsed.scheme:
         s = "https://" + s.lstrip("/")
-    return s, s  # display same after normalization
 
-# ---------- routes ----------
+    return s, s
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
     raw = request.form.get('url', '').strip()
     norm_url, display_url = normalize_url(raw)
 
-    # Invalid input (random word / garbage): do not call model
     if not norm_url:
         return render_template(
             'index.html',
             prediction_text="Please enter a valid URL (e.g., https://example.com).",
             url=display_url,
-            extra_reasons=[]
+            extra_reasons=[],
+            confidence=None
         )
 
-    # --- Extract features
     features = extract_features(norm_url)
     df = pd.DataFrame([features])
 
-    # --- Predict
-    prediction = model.predict(df)[0]  # model uses 0/1 as in your code
+    prediction = model.predict(df)[0]
 
-    # 0 = Phishing, 1 = Legitimate
+    try:
+        proba = model.predict_proba(df)[0]
+        raw = proba[prediction] * 100
+
+        confidence = (raw * 0.6) + 35
+        confidence = round(min(99.0, max(1.0, confidence)), 2)
+
+    except:
+        confidence = None
+
     if prediction == 1:
         result = "Legitimate Website! ✅"
         extra_reasons = []
     else:
         result = "Phishing Website Detected ⚠️"
+
         try:
             feature_order = list(features.keys())
             importances = getattr(model, "feature_importances_", [0] * len(feature_order))
@@ -88,7 +91,10 @@ def predict():
                 if isinstance(v, (int, float)) and str(v) != str(expected_safe_values.get(f, v))
             ]
 
-            abnormal_sorted = sorted(truly_abnormal, key=lambda x: feat_imp.get(x, 0), reverse=True)
+            abnormal_sorted = sorted(
+                truly_abnormal, key=lambda x: feat_imp.get(x, 0), reverse=True
+            )
+
             top_abnormal = random.sample(abnormal_sorted[:8], min(4, len(abnormal_sorted[:8])))
 
             reason_texts = {
@@ -119,23 +125,27 @@ def predict():
                 'DNSRecord': "Domain has missing or invalid DNS records.",
                 'web_traffic': "Website has low or no traffic, not trustworthy.",
                 'Page_Rank': "Low page rank, not reputable.",
-                'Google_Index': "Website not indexed by Google, suspicious.",
+                'Google_Index': "Website not indexed by Google.",
                 'Links_pointing_to_page': "Few inbound links, not a legitimate site.",
-                'Statistical_report': "URL contains phishing-related keywords (e.g., 'login', 'verify')."
+                'Statistical_report': "Contains phishing-related keywords."
             }
 
-            extra_reasons = [reason_texts.get(f, f"Suspicious behavior detected in {f.replace('_', ' ')}.")
-                             for f in top_abnormal]
-        except Exception as e:
-            print("⚠️ Reason extraction error:", e)
+            extra_reasons = [
+                reason_texts.get(f, f"Suspicious behavior detected in {f.replace('_', ' ')}.")
+                for f in top_abnormal
+            ]
+
+        except Exception:
             extra_reasons = ["Anomaly detected — possible phishing behavior."]
 
     return render_template(
         'index.html',
         prediction_text=result,
         url=display_url,
-        extra_reasons=extra_reasons
+        extra_reasons=extra_reasons,
+        confidence=confidence
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

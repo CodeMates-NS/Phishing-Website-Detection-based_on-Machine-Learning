@@ -155,24 +155,13 @@ button:hover{
 }
 .reset-btn:hover{ background:black; }
 
-/* Footer */
-.maintenance-banner{
-  background:black;
-  padding:14px 0;
-  text-align:center;
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  border-top:2px solid #333;
+.disclaimer {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #8affd6;
+    opacity: 0.7;
+    text-align: center;
 }
 
-.maintenance-text{
-  color:white;
-  font-size:16px;
-  animation:textBlink 1.5s infinite;
-}
 
-@keyframes textBlink{
-  0%{opacity:1;} 50%{opacity:0.35;} 100%{opacity:1;}
-}
+
