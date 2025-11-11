@@ -1,16 +1,14 @@
 from flask import Flask, render_template, request
-from flask_cors import CORS
-from flask import jsonify
 import joblib
 import pandas as pd
 import random
 from feature_extraction import extract_features
 
 app = Flask(__name__)
-CORS(app)  # <-- this line enables cross-origin access
 
 # Load trained model
 model = joblib.load("rf_model.pkl")
+
 
 @app.route('/')
 def home():
@@ -19,8 +17,7 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-    url = data.get('url', "").strip()
+    url = request.form['url'].strip()
 
     # --- Extract features
     features = extract_features(url)
@@ -129,11 +126,12 @@ def predict():
             print("⚠️ Reason extraction error:", e)
             extra_reasons = ["Anomaly detected — possible phishing behavior."]
 
-
-    return jsonify({
-        "prediction_text": result,
-        "extra_reasons": extra_reasons
-    })
+    return render_template(
+        'index.html',
+        prediction_text=result,
+        url=url,
+        extra_reasons=extra_reasons
+    )
 
 
 if __name__ == "__main__":
