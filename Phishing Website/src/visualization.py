@@ -86,7 +86,5 @@ plt.legend(loc="lower right", fontsize=10)
 plt.grid(alpha=0.4, linestyle='--')
 sns.despine()
 plt.tight_layout()
-
-
 plt.show()
 
