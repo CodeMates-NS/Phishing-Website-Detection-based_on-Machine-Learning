@@ -28,8 +28,8 @@ The app not only predicts if a URL is phishing but also provides **human-readabl
 ### ⚙️ Setup Instructions  
 1. Clone this repository  
    ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
-   cd <repo-name>
+   git clone https://github.com/CodeMates-NS/Phishing-Website-Detection-based_on-Machine-Learning
+   cd <path>/Phishing-Website-Detection-based_on-Machine-Learning
    ```  
 2. Install dependencies  
    ```bash
